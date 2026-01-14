@@ -50,13 +50,21 @@
                         experimental optimization in bioprocess development.</p>
                     <div class="logos-section">
                         <div class="logo-item">
-                            <img src="img/AISL_logo.png" alt="Autonomous Industrial Systems Lab">
+                            <a href="https://www.imperial.ac.uk/chemical-engineering/" target="_blank"
+                                rel="noopener noreferrer">
+                                <img src="img/AISL_logo.png" alt="Autonomous Industrial Systems Lab">
+                            </a>
                         </div>
                         <div class="logo-item">
-                            <img src="img/OptiML_landscape.png" alt="OptiML PSE">
+                            <a href="https://www.optimlpse.co.uk" target="_blank" rel="noopener noreferrer">
+                                <img src="img/OptiML_landscape.png" alt="OptiML PSE">
+                            </a>
                         </div>
                         <div class="logo-item">
-                            <img src="img/Sargent-Centre-Logo.png" alt="Sargent Centre for Process Systems Engineering">
+                            <a href="https://sargentcentre.org" target="_blank" rel="noopener noreferrer">
+                                <img src="img/Sargent-Centre-Logo.png"
+                                    alt="Sargent Centre for Process Systems Engineering">
+                            </a>
                         </div>
                     </div>
 
@@ -127,7 +135,9 @@
                         working on cutting-edge algorithms and hybrid modeling approaches.</p>
                 </div>
                 <div class="card-logo">
-                    <img src="img/DataHowLogo.png" alt="DataHow AG">
+                    <a href="https://www.datahow.ch/" target="_blank" rel="noopener noreferrer">
+                        <img src="img/DataHowLogo.png" alt="DataHow AG">
+                    </a>
                 </div>
             </div>
 
@@ -143,7 +153,10 @@
                     <p class="card-subtitle">Imperial College London, United Kingdom</p>
                     <li>Integration of AI and Digital Twins in Manufacturing</li>
                     <div class="card-institution-logo">
-                        <img src="img/Dep_Chem_Eng_sub_brand_large_RGB_black.png" alt="Imperial College London">
+                        <a href="https://www.imperial.ac.uk/chemical-engineering/" target="_blank"
+                            rel="noopener noreferrer">
+                            <img src="img/Dep_Chem_Eng_sub_brand_large_RGB_black.png" alt="Imperial College London">
+                        </a>
                     </div>
                 </div>
                 <div class="card">
@@ -158,7 +171,9 @@
                     <li>Classical Simulation of Bio-Molecular Systems</li>
                     <li>Digital Chemistry</li>
                     <div class="card-institution-logo">
-                        <img src="img/eth_logo.png" alt="ETH Zurich">
+                        <a href="https://chab.ethz.ch/en/" target="_blank" rel="noopener noreferrer">
+                            <img src="img/eth_logo.png" alt="ETH Zurich">
+                        </a>
                     </div>
                 </div>
                 <div class="card">
@@ -171,7 +186,9 @@
                     <li>Algorithms & Programming in C++</li>
                     <li>Electrochemical Energy Conversion and Storage Technologies</li>
                     <div class="card-institution-logo">
-                        <img src="img/eth_logo.png" alt="ETH Zurich">
+                        <a href="https://chab.ethz.ch/en/" target="_blank" rel="noopener noreferrer">
+                            <img src="img/eth_logo.png" alt="ETH Zurich">
+                        </a>
                     </div>
                 </div>
             </div>
@@ -193,7 +210,8 @@
             if (!navToggle || !navList) return;
             function updateNavDisplay() {
                 if (window.innerWidth > 700) {
-                    navList.style.display = 'flex';
+                    navList.style.display = '';
+                    navList.style.flexDirection = '';
                     navToggle.setAttribute('aria-expanded', 'false');
                 } else {
                     const expanded = navToggle.getAttribute('aria-expanded') === 'true';

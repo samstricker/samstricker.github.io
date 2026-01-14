@@ -81,7 +81,8 @@
             if (!navToggle || !navList) return;
             function updateNavDisplay() {
                 if (window.innerWidth > 700) {
-                    navList.style.display = 'flex';
+                    navList.style.display = '';
+                    navList.style.flexDirection = '';
                     navToggle.setAttribute('aria-expanded', 'false');
                 } else {
                     const expanded = navToggle.getAttribute('aria-expanded') === 'true';
