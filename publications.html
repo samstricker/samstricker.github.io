@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Publications — Sam Stricker</title>
+    <meta name="description" content="Publications by Sam Stricker">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="index.html" class="logo">Sam Stricker</a>
+
+            <nav id="main-nav" class="main-nav" role="navigation" aria-label="Main Navigation">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="news.html">News</a></li>
+                    <li><a href="publications.html">Publications</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+
+            <button class="nav-toggle" aria-expanded="false" aria-controls="main-nav">Menu</button>
+        </div>
+    </header>
+
+    <main class="page-section">
+        <div class="container">
+            <h2>Publications</h2>
+
+            <h3>Journal Papers</h3>
+            <div id="publications-container">
+                <!-- Publications will be populated from CSV -->
+            </div>
+
+            <div id="conference-section" style="display: none;">
+                <h3>Conference Papers</h3>
+                <div id="conference-publications-container">
+                    <!-- Conference papers will be populated from CSV -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <p>&copy; 2026 Sam Stricker. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // CSV Parsing and Card Generation
+        async function loadPublicationsFromCSV() {
+            try {
+                const response = await fetch('data/journal_papers.csv');
+                const csvText = await response.text();
+                const rows = parseCSV(csvText);
+                const container = document.getElementById('publications-container');
+
+                // Check if there are any publications (more than just the header)
+                if (rows.length <= 1) {
+                    container.innerHTML = '<p>I\'m working on some publications. They will be here as soon as they are published.</p>';
+                    return;
+                }
+
+                // Skip header row and create cards for each data row
+                rows.slice(1).forEach(row => {
+                    if (row.length >= 8) {
+                        const [title, imagePath, authors, text, journal, page, year, link] = row;
+                        const card = createPublicationCard(title, imagePath, authors, text, journal, page, year, link);
+                        container.appendChild(card);
+                    }
+                });
+            } catch (error) {
+                console.error('Error loading publications CSV:', error);
+                document.getElementById('publications-container').innerHTML =
+                    '<p>Unable to load publications at this time.</p>';
+            }
+        }
+
+        function parseCSV(text) {
+            const rows = [];
+            let currentRow = [];
+            let currentCell = '';
+            let insideQuotes = false;
+
+            for (let i = 0; i < text.length; i++) {
+                const char = text[i];
+                const nextChar = text[i + 1];
+
+                if (char === '"') {
+                    if (insideQuotes && nextChar === '"') {
+                        currentCell += '"';
+                        i++;
+                    } else {
+                        insideQuotes = !insideQuotes;
+                    }
+                } else if (char === ',' && !insideQuotes) {
+                    currentRow.push(currentCell.trim());
+                    currentCell = '';
+                } else if ((char === '\n' || char === '\r') && !insideQuotes) {
+                    if (currentCell || currentRow.length > 0) {
+                        currentRow.push(currentCell.trim());
+                        if (currentRow.some(cell => cell.length > 0)) {
+                            rows.push(currentRow);
+                        }
+                        currentRow = [];
+                        currentCell = '';
+                    }
+                    if (char === '\r' && nextChar === '\n') {
+                        i++;
+                    }
+                } else {
+                    currentCell += char;
+                }
+            }
+
+            if (currentCell || currentRow.length > 0) {
+                currentRow.push(currentCell.trim());
+                if (currentRow.some(cell => cell.length > 0)) {
+                    rows.push(currentRow);
+                }
+            }
+
+            return rows;
+        }
+
+        function createPublicationCard(title, imagePath, authors, text, journal, page, year, link) {
+            const cardLink = document.createElement('a');
+            cardLink.href = link;
+            cardLink.target = '_blank';
+            cardLink.rel = 'noopener noreferrer';
+            cardLink.className = 'publication-card-link';
+
+            const card = document.createElement('div');
+            card.className = 'publication-card card';
+
+            const imageHtml = imagePath ? `<img src="${imagePath}" alt="${title}" class="publication-image">` : '';
+
+            card.innerHTML = `
+                <div class="publication-content">
+                    <h3>${title}</h3>
+                    <p class="publication-authors"><strong>Authors:</strong> ${authors}</p>
+                    <p>${text}</p>
+                    <div class="publication-details">
+                        <p><strong>Journal:</strong> ${journal}</p>
+                        <p><strong>Pages:</strong> ${page}</p>
+                        <p><strong>Year:</strong> ${year}</p>
+                    </div>
+                </div>
+                ${imageHtml}
+            `;
+
+            cardLink.appendChild(card);
+            return cardLink;
+        }
+
+        // Navigation toggle
+        (function () {
+            const navToggle = document.querySelector('.nav-toggle');
+            const navList = document.querySelector('.main-nav ul');
+            if (!navToggle || !navList) return;
+            function updateNavDisplay() {
+                if (window.innerWidth > 700) {
+                    navList.style.display = 'flex';
+                    navToggle.setAttribute('aria-expanded', 'false');
+                } else {
+                    const expanded = navToggle.getAttribute('aria-expanded') === 'true';
+                    navList.style.display = expanded ? 'flex' : 'none';
+                    navList.style.flexDirection = 'column';
+                }
+            }
+            navToggle.addEventListener('click', function () {
+                const expanded = this.getAttribute('aria-expanded') === 'true';
+                this.setAttribute('aria-expanded', String(!expanded));
+                updateNavDisplay();
+            });
+            window.addEventListener('resize', updateNavDisplay);
+            updateNavDisplay();
+        })();
+
+        // Load conference papers from CSV
+        async function loadConferencePapersFromCSV() {
+            try {
+                const response = await fetch('data/conference_papers.csv');
+                const csvText = await response.text();
+                const rows = parseCSV(csvText);
+                const conferenceSection = document.getElementById('conference-section');
+                const container = document.getElementById('conference-publications-container');
+
+                // Check if there are any conference papers (more than just the header)
+                if (rows.length <= 1) {
+                    // Don't display anything if empty
+                    conferenceSection.style.display = 'none';
+                    return;
+                }
+
+                // Show section if there is data
+                conferenceSection.style.display = 'block';
+
+                // Skip header row and create cards for each data row
+                rows.slice(1).forEach(row => {
+                    if (row.length >= 8) {
+                        const [title, imagePath, authors, text, conference, date, year, link] = row;
+                        const card = createConferencePaperCard(title, imagePath, authors, text, conference, date, year, link);
+                        container.appendChild(card);
+                    }
+                });
+            } catch (error) {
+                console.error('Error loading conference papers CSV:', error);
+                document.getElementById('conference-section').style.display = 'none';
+            }
+        }
+
+        function createConferencePaperCard(title, imagePath, authors, text, conference, date, year, link) {
+            const cardLink = document.createElement('a');
+            cardLink.href = link;
+            cardLink.target = '_blank';
+            cardLink.rel = 'noopener noreferrer';
+            cardLink.className = 'publication-card-link';
+
+            const card = document.createElement('div');
+            card.className = 'publication-card card';
+
+            const imageHtml = imagePath ? `<img src="${imagePath}" alt="${title}" class="publication-image">` : '';
+
+            card.innerHTML = `
+                <div class="publication-content">
+                    <h3>${title}</h3>
+                    <p class="publication-authors"><strong>Authors:</strong> ${authors}</p>
+                    <p>${text}</p>
+                    <div class="publication-details">
+                        <p><strong>Conference:</strong> ${conference}</p>
+                        <p><strong>Date:</strong> ${date}</p>
+                        <p><strong>Year:</strong> ${year}</p>
+                    </div>
+                </div>
+                ${imageHtml}
+            `;
+
+            cardLink.appendChild(card);
+            return cardLink;
+        }
+
+        // Load publications when page loads
+        document.addEventListener('DOMContentLoaded', function () {
+            loadPublicationsFromCSV();
+            loadConferencePapersFromCSV();
+        });
+    </script>
+</body>
+
+</html>

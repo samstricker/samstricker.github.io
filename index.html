@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Sam Stricker</title>
+    <meta name="description" content="Sam Stricker's Website">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="index.html" class="logo">Sam Stricker</a>
+
+            <nav id="main-nav" class="main-nav" role="navigation" aria-label="Main Navigation">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="news.html">News</a></li>
+                    <li><a href="publications.html">Publications</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+
+            <button class="nav-toggle" aria-expanded="false" aria-controls="main-nav">Menu</button>
+        </div>
+    </header>
+
+    <main id="home" class="hero">
+        <div class="container">
+            <div class="home-content">
+                <div class="home-image">
+                    <img src="img/profil.jpg" alt="Sam Stricker">
+                </div>
+                <div class="home-research">
+                    <h2>Hey there</h2>
+                    <p>I'm Sam and you've reached my personal website have a look around. I'm a PhD student in Chemical
+                        Engineering at
+                        Imperial College London. My current research at Imperial College London focuses on leveraging
+                        artificial
+                        intelligence and
+                        digital twin technologies to enhance manufacturing and laboratory operations. This work bridges
+                        chemical engineering with advanced computational methods to create more efficient, predictive,
+                        and sustainable processes.</p>
+                    <p>I investigate the integration of AI and digital twins to transform how we design, optimize, and
+                        control complex chemical and pharmaceutical processes, making them more efficient, sustainable,
+                        and adaptable.</p>
+                    <a href="about.html" class="btn-link">Find out more about me</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <section class="page-section">
+        <div class="container">
+            <div class="cards-grid">
+                <a href="news.html" class="card">
+                    <h3>Research Updates</h3>
+                    <p>Follow my work in AI and digital twins for manufacturing and laboratory automation.
+                    </p>
+                </a>
+                <a href="publications.html" class="card">
+                    <h3>Publications</h3>
+                    <p>Visit the Publications page to see my latest peer-reviewed papers and research contributions.</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <p>&copy; 2026 Sam Stricker. All rights reserved.</p>
+    </footer>
+
+    <script>
+        (function () {
+            const navToggle = document.querySelector('.nav-toggle');
+            const navList = document.querySelector('.main-nav ul');
+            if (!navToggle || !navList) return;
+            function updateNavDisplay() {
+                if (window.innerWidth > 700) {
+                    navList.style.display = 'flex';
+                    navToggle.setAttribute('aria-expanded', 'false');
+                } else {
+                    const expanded = navToggle.getAttribute('aria-expanded') === 'true';
+                    navList.style.display = expanded ? 'flex' : 'none';
+                    navList.style.flexDirection = 'column';
+                }
+            }
+            navToggle.addEventListener('click', function () {
+                const expanded = this.getAttribute('aria-expanded') === 'true';
+                this.setAttribute('aria-expanded', String(!expanded));
+                updateNavDisplay();
+            });
+            window.addEventListener('resize', updateNavDisplay);
+            updateNavDisplay();
+        })();
+    </script>
+</body>
+
+</html>

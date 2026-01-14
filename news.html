@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>News — Sam Stricker</title>
+    <meta name="description" content="News and updates from Sam Stricker">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="index.html" class="logo">Sam Stricker</a>
+
+            <nav id="main-nav" class="main-nav" role="navigation" aria-label="Main Navigation">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="news.html">News</a></li>
+                    <li><a href="publications.html">Publications</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+
+            <button class="nav-toggle" aria-expanded="false" aria-controls="main-nav">Menu</button>
+        </div>
+    </header>
+
+    <main class="page-section">
+        <div class="container">
+            <h2>Recent News</h2>
+
+            <div id="news-container" class="cards-grid">
+                <!-- News cards will be populated from CSV -->
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <p>&copy; 2026 Sam Stricker. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // CSV Parsing and Card Generation
+        async function loadNewsFromCSV() {
+            try {
+                const response = await fetch('data/news_data.csv');
+                const csvText = await response.text();
+                const rows = parseCSV(csvText);
+                const newsContainer = document.getElementById('news-container');
+
+                // Skip header row and create cards for each data row
+                rows.slice(1).forEach(row => {
+                    if (row.length >= 5) {
+                        const [title, date, text, imagePath, link] = row;
+                        const card = createNewsCard(title, date, text, imagePath, link);
+                        newsContainer.appendChild(card);
+                    }
+                });
+            } catch (error) {
+                console.error('Error loading news CSV:', error);
+                document.getElementById('news-container').innerHTML =
+                    '<p>Unable to load news at this time.</p>';
+            }
+        }
+
+        function parseCSV(text) {
+            const rows = [];
+            let currentRow = [];
+            let currentCell = '';
+            let insideQuotes = false;
+
+            for (let i = 0; i < text.length; i++) {
+                const char = text[i];
+                const nextChar = text[i + 1];
+
+                if (char === '"') {
+                    if (insideQuotes && nextChar === '"') {
+                        currentCell += '"';
+                        i++;
+                    } else {
+                        insideQuotes = !insideQuotes;
+                    }
+                } else if (char === ',' && !insideQuotes) {
+                    currentRow.push(currentCell.trim());
+                    currentCell = '';
+                } else if ((char === '\n' || char === '\r') && !insideQuotes) {
+                    if (currentCell || currentRow.length > 0) {
+                        currentRow.push(currentCell.trim());
+                        if (currentRow.some(cell => cell.length > 0)) {
+                            rows.push(currentRow);
+                        }
+                        currentRow = [];
+                        currentCell = '';
+                    }
+                    if (char === '\r' && nextChar === '\n') {
+                        i++;
+                    }
+                } else {
+                    currentCell += char;
+                }
+            }
+
+            if (currentCell || currentRow.length > 0) {
+                currentRow.push(currentCell.trim());
+                if (currentRow.some(cell => cell.length > 0)) {
+                    rows.push(currentRow);
+                }
+            }
+
+            return rows;
+        }
+
+        function createNewsCard(title, date, text, imagePath, link) {
+            const card = document.createElement('div');
+            card.className = 'card news-card';
+
+            const imageHtml = imagePath ? `<img src="${imagePath}" alt="${title}" class="news-card-image">` : '';
+
+            card.innerHTML = `
+                ${imageHtml}
+                <div class="news-card-content">
+                    <h3>${title}</h3>
+                    <p class="news-date">${date}</p>
+                    <p>${text}</p>
+                    <a href="${link}" target="_blank" rel="noopener noreferrer" class="news-link">Read more →</a>
+                </div>
+            `;
+
+            return card;
+        }
+
+        // Navigation toggle
+        (function () {
+            const navToggle = document.querySelector('.nav-toggle');
+            const navList = document.querySelector('.main-nav ul');
+            if (!navToggle || !navList) return;
+            function updateNavDisplay() {
+                if (window.innerWidth > 700) {
+                    navList.style.display = 'flex';
+                    navToggle.setAttribute('aria-expanded', 'false');
+                } else {
+                    const expanded = navToggle.getAttribute('aria-expanded') === 'true';
+                    navList.style.display = expanded ? 'flex' : 'none';
+                    navList.style.flexDirection = 'column';
+                }
+            }
+            navToggle.addEventListener('click', function () {
+                const expanded = this.getAttribute('aria-expanded') === 'true';
+                this.setAttribute('aria-expanded', String(!expanded));
+                updateNavDisplay();
+            });
+            window.addEventListener('resize', updateNavDisplay);
+            updateNavDisplay();
+        })();
+
+        // Load news when page loads
+        document.addEventListener('DOMContentLoaded', loadNewsFromCSV);
+    </script>
+</body>
+
+</html>

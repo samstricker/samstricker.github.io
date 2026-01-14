@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Contact — Sam Stricker</title>
+    <meta name="description" content="Contact Sam Stricker">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="index.html" class="logo">Sam Stricker</a>
+
+            <nav id="main-nav" class="main-nav" role="navigation" aria-label="Main Navigation">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="news.html">News</a></li>
+                    <li><a href="publications.html">Publications</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+
+            <button class="nav-toggle" aria-expanded="false" aria-controls="main-nav">Menu</button>
+        </div>
+    </header>
+
+    <main class="page-section">
+        <div class="container">
+            <h2>Contact Me</h2>
+            <p>Feel free to reach out to me through the following channels:</p>
+
+            <div class="contact-cards">
+                <div class="card contact-card">
+                    <a href="https://www.linkedin.com/in/strickersam/" target="_blank" rel="noopener noreferrer">
+                        <i class="fab fa-linkedin"></i>
+                        <h3>LinkedIn</h3>
+                        <p>Connect with me on LinkedIn to stay updated with my professional activities.</p>
+                    </a>
+                </div>
+                <div class="card contact-card">
+                    <a href="javascript:void(0)" onclick="revealEmail()" class="email-toggle">
+                        <i class="fas fa-envelope"></i>
+                        <h3>Email</h3>
+                        <p id="email-display">Click to reveal email address</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <p>&copy; 2026 Sam Stricker. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Email reveal function
+        function revealEmail() {
+            const emailDisplay = document.getElementById('email-display');
+            const email = 'sam' + 'uel.' + 'str' + 'icker25' + '@' + 'imperial.ac.uk';
+            if (emailDisplay.textContent === 'Click to reveal email address') {
+                emailDisplay.textContent = email;
+                emailDisplay.style.fontWeight = 'bold';
+            } else {
+                emailDisplay.textContent = 'Click to reveal email address';
+                emailDisplay.style.fontWeight = 'normal';
+            }
+        }
+
+        // Navigation toggle
+        (function () {
+            const navToggle = document.querySelector('.nav-toggle');
+            const navList = document.querySelector('.main-nav ul');
+            if (!navToggle || !navList) return;
+            function updateNavDisplay() {
+                if (window.innerWidth > 700) {
+                    navList.style.display = 'flex';
+                    navToggle.setAttribute('aria-expanded', 'false');
+                } else {
+                    const expanded = navToggle.getAttribute('aria-expanded') === 'true';
+                    navList.style.display = expanded ? 'flex' : 'none';
+                    navList.style.flexDirection = 'column';
+                }
+            }
+            navToggle.addEventListener('click', function () {
+                const expanded = this.getAttribute('aria-expanded') === 'true';
+                this.setAttribute('aria-expanded', String(!expanded));
+                updateNavDisplay();
+            });
+            window.addEventListener('resize', updateNavDisplay);
+            updateNavDisplay();
+        })();
+    </script>
+</body>
+
+</html>
